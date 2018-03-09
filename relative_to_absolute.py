@@ -100,7 +100,7 @@ class relative_to_absolute(QtWidgets.QWidget):
         if not p.keyframes():  
                     
             # CHECK IF IT'S A COMPLICATED EXPRESSION
-            elif p.unexpandedString().count('"') > 2 or p.unexpandedString().count("'") > 2:
+            if p.unexpandedString().count('"') > 2 or p.unexpandedString().count("'") > 2:
                 
                 # A HACKY WAY TO DEAL WITH EXPRESSIONS WITHIN EXPRESSIONS. MAY NEED TO UPDATE ON CASE-BY-CASE BASIS, BUT WORKS WITH WHAT I'VE THROWN AT IT SO FAR
                 old_p_val = p.unexpandedString()
