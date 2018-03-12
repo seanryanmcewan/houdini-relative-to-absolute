@@ -2,6 +2,20 @@ from hutil.Qt import QtCore
 from hutil.Qt import QtWidgets
 
 class relative_to_absolute(QtWidgets.QWidget):
+    """
+    Checks all parameters of the specified nodes for relative file references, and converts them to absolute file references. 
+    
+    For example: "$HIP/geo/my_cache.bgeo" would be converted to "/path/to/your/hip/geo/my_cache.bgeo"
+    
+    It will also follow channel references to find relative file references. 
+    
+    For example:
+    The 'file' parameter of file_node1 is set to "$HIP/geo/my_cache.bgeo"
+    The 'file' parameter of file_node2 is set to `chs("../file1/file")`
+    
+    If run on file_node2, its file parameter will be expanded to "/path/to/your/hip/geo/my_cache.bgeo"
+    """
+    
     def __init__(self, parent=None):
         # INITIALIZE GUI AND SET WINDOW TO ALWAYS ON TOP
         QtWidgets.QWidget.__init__(self, parent, QtCore.Qt.WindowStaysOnTopHint)
@@ -43,7 +57,7 @@ class relative_to_absolute(QtWidgets.QWidget):
 
     def updatePaths(self):  
         """
-        Iterates over all of the external file references in the current scene, and sends to containing parameter 
+        Iterates over all of the external file references in the current scene, and sends the containing parameter 
         to the 'checkBeforeChange' method.
         """
         
