@@ -40,7 +40,7 @@ class relative_to_absolute(QtWidgets.QWidget):
         # SET LAYOUT
         self.setLayout(vbox)
         
-    # FUNCTION WHICH ITERATES OVER ALL EXTERNAL FILE REFERENCES AND SENDS THE CONTAINING PARM TO checkBeforeChange
+    # ITERATES OVER ALL EXTERNAL FILE REFERENCES AND SENDS THE CONTAINING PARM TO checkBeforeChange
     def updatePaths(self):  
         self.updated_list = []
         
@@ -89,11 +89,11 @@ class relative_to_absolute(QtWidgets.QWidget):
         if self.updated_list:
             message = "The following paths were updated:\n"
             for item in self.updated_list:
-                message += '\nThe parm "%s" was changed from/to:\n%s\n%s\n' % (item[0], item[1],item[2])
+                message += '\nThe parm "{0}" was changed from/to:\n{1}\n{2}\n'.format(item[0], item[1],item[2])
             hou.ui.displayMessage(message)
          
         
-    # FUNCTION WHICH DETERMINES WHETHER A PARM CAN BE UPDATED, THEN SENDS TO relativeToAbsolute
+    # DETERMINES WHETHER A PARM CAN BE UPDATED, THEN SENDS TO relativeToAbsolute
     def checkBeforeChange(self, p):
         
         # CAN'T GET UNEXPANDEDSTRING FOR PARMS WITH KEYFRAMES
@@ -108,7 +108,7 @@ class relative_to_absolute(QtWidgets.QWidget):
                 quote_style = linked_node[0]
                 linked_parm = linked_node.rpartition('/')[-1].rstrip('"').rstrip("'")     
                 linked_node = linked_node.rpartition('/')[0]
-                p.set('`opfullpathfrom(%s%s, %s%s")`' % (linked_node, quote_style, quote_style, p.node().path()))
+                p.set('`opfullpathfrom({0}{1}, {2}{3}")`'.format(linked_node, quote_style, quote_style, p.node().path()))
                 ref_parm = hou.parm(p.eval() + "/" + linked_parm)
                 p.revertToDefaults()
                 new_p_val = self.relativeToAbsolute(ref_parm, p)
@@ -131,7 +131,7 @@ class relative_to_absolute(QtWidgets.QWidget):
                 if old_p_val != new_p_val:
                     self.updated_list.append([p.path(), old_p_val, new_p_val])   
 
-    # FUNCTION WHICH DOES THE ACTUAL CONVERTING, MAINTINING FRAME VARIABLES
+    # DOES THE ACTUAL CONVERTING, MAINTINING FRAME VARIABLES
     def relativeToAbsolute(self, parm_to_read, parm_to_set):  
         
         # INITIALIZE VARIABLES
@@ -178,13 +178,12 @@ class relative_to_absolute(QtWidgets.QWidget):
                             switch = 0
                         x += 1
                     index += index_update
-                    temp = "~~~TEMPORARY_HOLDING_FOR_FRAME___%s" % parm_to_read.unexpandedString()[index:index+2+x-1].lstrip("$")
+                    temp = "~~~TEMPORARY_HOLDING_FOR_FRAME___{0}".format(parm_to_read.unexpandedString()[index:index+2+x-1].lstrip("$"))
                     index_update += (len(temp) - len(parm_to_read.unexpandedString()[index:index+2+x-1]))
                     new_val = parm_to_read.unexpandedString()[:index] + \
                     parm_to_read.unexpandedString()[index:index+2+x-1].replace(parm_to_read.unexpandedString()[index:index+2+x-1], temp) + \
                     parm_to_read.unexpandedString()[index+2+x-1:]
-                    parm_to_read.set(new_val)
-                    
+                    parm_to_read.set(new_val)                    
          
         # CLEAN UP AND SET PARAMETER TO NEW VALUE
         new_val = parm_to_read.eval()
@@ -205,21 +204,21 @@ class relative_to_absolute(QtWidgets.QWidget):
             sel = current_selection    
             
         # ALL NODES IN SCENE (ANY CONTEXT)
-        if search_mode == 1:
+        elif search_mode == 1:
             sel = []
             for node in hou.node('/').allSubChildren():
                 if "/obj/ipr_camera" not in node.path():
                     sel.append(node)   
                     
         # ALL NODES IN OBJ CONTEXT
-        if search_mode == 2:
+        elif search_mode == 2:
             sel = []
             for node in hou.node('/obj').allSubChildren():
                 if "/obj/ipr_camera" not in node.path():
                     sel.append(node)          
                     
         # SELECTED NODES AND DIRECT CHILDREN
-        if search_mode == 3:
+        elif search_mode == 3:
             sel = []
             for node in current_selection:
                 if node.children():
@@ -227,21 +226,21 @@ class relative_to_absolute(QtWidgets.QWidget):
             sel.extend(current_selection)
             
         # SELECTED NODES & ALL SUBCHILDREN
-        if search_mode == 4:
+        elif search_mode == 4:
             sel = current_selection
             for node in current_selection:
                 if node.children():
                     sel.extend(list(node.allSubChildren()))
                     
         # ONLY DIRECT CHILDREN OF SELECTED NODES
-        if search_mode == 5:
+        elif search_mode == 5:
             sel = []
             for node in current_selection:
                 if node.children():
                     sel.extend(list(node.children())) 
                     
         # ONLY ALL SUBCHILDREN OF SELECTED NODES
-        if search_mode == 6:
+        elif search_mode == 6:
             sel = []
             for node in current_selection:
                 if node.children():
