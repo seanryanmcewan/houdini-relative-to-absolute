@@ -40,8 +40,13 @@ class relative_to_absolute(QtWidgets.QWidget):
         # SET LAYOUT
         self.setLayout(vbox)
         
-    # ITERATES OVER ALL EXTERNAL FILE REFERENCES AND SENDS THE CONTAINING PARM TO checkBeforeChange
+
     def updatePaths(self):  
+        """
+        Iterates over all of the external file references in the current scene, and sends to containing parameter 
+        to the 'checkBeforeChange' method.
+        """
+        
         self.updated_list = []
         
         # QUERY USER ON WHICH NODES TO APPLY TO
@@ -93,8 +98,10 @@ class relative_to_absolute(QtWidgets.QWidget):
             hou.ui.displayMessage(message)
          
         
-    # DETERMINES WHETHER A PARM CAN BE UPDATED, THEN SENDS TO relativeToAbsolute
     def checkBeforeChange(self, p):
+        """
+        Determines whether a parameter can be updated, then sends to the 'relativeToAbsolute' method.
+        """
         
         # CAN'T GET UNEXPANDEDSTRING FOR PARMS WITH KEYFRAMES
         if not p.keyframes():  
@@ -131,8 +138,12 @@ class relative_to_absolute(QtWidgets.QWidget):
                 if old_p_val != new_p_val:
                     self.updated_list.append([p.path(), old_p_val, new_p_val])   
 
-    # DOES THE ACTUAL CONVERTING, MAINTINING FRAME VARIABLES
+
     def relativeToAbsolute(self, parm_to_read, parm_to_set):  
+        """
+        Converts a parameter from a relative reference to an absolute references, while maintaining
+        frame variables (i.e. $F, $FF, $F4)
+        """
         
         # INITIALIZE VARIABLES
         old_parm_to_read_val = parm_to_read.unexpandedString()
@@ -195,8 +206,11 @@ class relative_to_absolute(QtWidgets.QWidget):
         
         return new_val_finalized
         
-    # QUERY USER FOR WHICH NODES TO APPLY TO
     def setSearchMode(self, current_selection):
+        """
+        Query user for which nodes to apply to (reads from "Apply To" combobox)
+        """
+        
         search_mode = self.apply_to_combo_box.currentIndex() 
         
         # SELECTED NODES ONLY
