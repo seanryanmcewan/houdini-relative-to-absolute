@@ -6,9 +6,7 @@ class relative_to_absolute(QtWidgets.QWidget):
     Checks all parameters of the specified nodes for relative file references, and converts them to absolute file references. 
     
     For example: "$HIP/geo/my_cache.bgeo" would be converted to "/path/to/your/hip/geo/my_cache.bgeo"
-    
     It will also follow channel references to find relative file references. 
-    
     For example:
     The 'file' parameter of file_node1 is set to "$HIP/geo/my_cache.bgeo"
     The 'file' parameter of file_node2 is set to `chs("../file1/file")`
@@ -115,6 +113,9 @@ class relative_to_absolute(QtWidgets.QWidget):
     def checkBeforeChange(self, p):
         """
         Determines whether a parameter can be updated, then sends to the 'relativeToAbsolute' method.
+        
+        Arguments:
+        p (hou.Parm): Houdini parameter to check.
         """
         
         # CAN'T GET UNEXPANDEDSTRING FOR PARMS WITH KEYFRAMES
@@ -156,7 +157,14 @@ class relative_to_absolute(QtWidgets.QWidget):
     def relativeToAbsolute(self, parm_to_read, parm_to_set):  
         """
         Converts a parameter from a relative reference to an absolute references, while maintaining
-        frame variables (i.e. $F, $FF, $F4)
+        frame variables (i.e. $F, $FF, $F4).
+        
+        Arguments:
+        parm_to_read (hou.Parm): Houdini parameter to convert references from.
+        parm_to_set (hou.Parm): Houdini parameter to set updated value on.
+        
+        Returns:
+        new_val_finalized: Updated value for parameter.
         """
         
         # INITIALIZE VARIABLES
@@ -223,9 +231,23 @@ class relative_to_absolute(QtWidgets.QWidget):
     def setSearchMode(self, current_selection):
         """
         Query user for which nodes to apply to (reads from "Apply To" combobox)
+        
+        Arguments:
+        current_selection (int): Determines which nodes will queried. Options are:
+            0 - Selected Nodes Only
+            1 - All Nodes In Scene (Any Context)
+            2 - All Nodes In Obj Context
+            3 - Selected Nodes And Their Direct Children
+            4 - Selected Nodes And All Subchildren
+            5 - Only Direct Children of Selected Nodes
+            6 - Only All Subchildren Of Selected Nodes
+            
+        Returns:
+        sel (list): list of nodes to query
         """
         
         search_mode = self.apply_to_combo_box.currentIndex() 
+        sel = []
         
         # SELECTED NODES ONLY
         if search_mode == 0:
@@ -233,21 +255,18 @@ class relative_to_absolute(QtWidgets.QWidget):
             
         # ALL NODES IN SCENE (ANY CONTEXT)
         elif search_mode == 1:
-            sel = []
             for node in hou.node('/').allSubChildren():
                 if "/obj/ipr_camera" not in node.path():
                     sel.append(node)   
                     
         # ALL NODES IN OBJ CONTEXT
         elif search_mode == 2:
-            sel = []
             for node in hou.node('/obj').allSubChildren():
                 if "/obj/ipr_camera" not in node.path():
                     sel.append(node)          
                     
         # SELECTED NODES AND DIRECT CHILDREN
         elif search_mode == 3:
-            sel = []
             for node in current_selection:
                 if node.children():
                     sel.extend(list(node.children()))   
@@ -262,14 +281,12 @@ class relative_to_absolute(QtWidgets.QWidget):
                     
         # ONLY DIRECT CHILDREN OF SELECTED NODES
         elif search_mode == 5:
-            sel = []
             for node in current_selection:
                 if node.children():
                     sel.extend(list(node.children())) 
                     
         # ONLY ALL SUBCHILDREN OF SELECTED NODES
         elif search_mode == 6:
-            sel = []
             for node in current_selection:
                 if node.children():
                     sel.extend(node.allSubChildren())   
