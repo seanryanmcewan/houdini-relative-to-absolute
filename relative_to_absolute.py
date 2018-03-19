@@ -115,7 +115,7 @@ class relative_to_absolute(QtWidgets.QWidget):
         Determines whether a parameter can be updated, then sends to the 'relativeToAbsolute' method.
         
         Arguments:
-        p (hou.Parm): Houdini parameter to check.
+            p (hou.Parm): Houdini parameter to check.
         """
         
         # CAN'T GET UNEXPANDEDSTRING FOR PARMS WITH KEYFRAMES
@@ -160,11 +160,11 @@ class relative_to_absolute(QtWidgets.QWidget):
         frame variables (i.e. $F, $FF, $F4).
         
         Arguments:
-        parm_to_read (hou.Parm): Houdini parameter to convert references from.
-        parm_to_set (hou.Parm): Houdini parameter to set updated value on.
+            parm_to_read (hou.Parm): Houdini parameter to convert references from.
+            parm_to_set (hou.Parm): Houdini parameter to set updated value on.
         
         Returns:
-        new_val_finalized: Updated value for parameter. Type depends on input.
+            new_val_finalized: Updated value for parameter. Type depends on input.
         """
         
         # INITIALIZE VARIABLES
@@ -233,17 +233,17 @@ class relative_to_absolute(QtWidgets.QWidget):
         Query user for which nodes to apply to (reads from "Apply To" combobox)
         
         Arguments:
-        current_selection (int): Determines which nodes will queried. Options are:
-            0 - Selected Nodes Only
-            1 - All Nodes In Scene (Any Context)
-            2 - All Nodes In Obj Context
-            3 - Selected Nodes And Their Direct Children
-            4 - Selected Nodes And All Subchildren
-            5 - Only Direct Children of Selected Nodes
-            6 - Only All Subchildren Of Selected Nodes
+            current_selection (int): Determines which nodes will queried. Options are:
+                0 - Selected Nodes Only
+                1 - All Nodes In Scene (Any Context)
+                2 - All Nodes In Obj Context
+                3 - Selected Nodes And Their Direct Children
+                4 - Selected Nodes And All Subchildren
+                5 - Only Direct Children of Selected Nodes
+                6 - Only All Subchildren Of Selected Nodes
             
         Returns:
-        list: list of nodes to query
+            list: list of nodes to query
         """
         
         search_mode = self.apply_to_combo_box.currentIndex() 
