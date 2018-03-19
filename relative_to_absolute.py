@@ -164,7 +164,7 @@ class relative_to_absolute(QtWidgets.QWidget):
         parm_to_set (hou.Parm): Houdini parameter to set updated value on.
         
         Returns:
-        new_val_finalized: Updated value for parameter.
+        new_val_finalized: Updated value for parameter. Type depends on input.
         """
         
         # INITIALIZE VARIABLES
@@ -243,7 +243,7 @@ class relative_to_absolute(QtWidgets.QWidget):
             6 - Only All Subchildren Of Selected Nodes
             
         Returns:
-        sel (list): list of nodes to query
+        list: list of nodes to query
         """
         
         search_mode = self.apply_to_combo_box.currentIndex() 
